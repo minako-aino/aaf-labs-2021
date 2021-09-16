@@ -21,10 +21,12 @@ def many_lines_input():
     return " ".join(str1.split())
 #
 # print(many_lines_input())
-def find_between( s, first, last ):
+
+
+def find_between(s, first, last):
     try:
-        start = s.index( first ) + len( first )
-        end = s.index( last, start )
+        start = s.index(first) + len(first)
+        end = s.index(last, start)
         return s[start:end]
     except ValueError:
         return ""
@@ -36,7 +38,7 @@ def read_create(command):
     pattern = "(CREATE|create)\s[A-Za-z_\d]*\s\(([A-Za-z0-9_]*,?(\s(INDEXED|indexed),)?\s?)*\)"
     if re.match(pattern, command):
         table_name = command.split()[1]
-        columns_name = re.split(r"%s" % table_name, command)[1]
+        columns_name = find_between(command, "(", ")")
     else:
         print("invalid syntax")
     return table_name, columns_name
