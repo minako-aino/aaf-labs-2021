@@ -38,14 +38,21 @@ def read_create(command):
     pattern = "(CREATE|create)\s[A-Za-z_\d]*\s\(([A-Za-z0-9_]*,?(\s(INDEXED|indexed),)?\s?)*\)"
     if re.match(pattern, command):
         table_name = command.split()[1]
-        columns_name = find_between(command, "(", ")")
+        columns_name = find_between(command, "(", ")").split(", ")
+        indexation = {}
+        for name in columns_name:
+            if re.search(r"INDEXED|indexed", name):
+                indexation[name] = 1
+            else:
+                indexation[name] = 0
+
     else:
         print("invalid syntax")
-    return table_name, columns_name
+    return table_name, columns_name, indexation
 
 
 
+_, names, name = read_create("CREATE cats (idgggggg, name, favourite_food indexed)")
 
-print(find_between("CREATE cats (idgggggg, name, favourite_food indexed)", "(", ")"))
 print(read_create("CREATE cats (idgggggg, name, favourite_food indexed)"))
 # print(re.sub(r"\([A-Za-z0-9,\s]*\)", ' ', "CREATE dogs (idggggggg, name, favourite_food indexed)"))
