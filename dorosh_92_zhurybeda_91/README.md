@@ -6,7 +6,7 @@
 Варіант 7: Реляційна модель із фільтрацією довільної складності
 
 ### Schedule
-[29-09-2021] 
+[14-10-2021] 
  - commands parsings	   
  - create appropriate regex for each of cases
 
