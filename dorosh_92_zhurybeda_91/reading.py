@@ -67,10 +67,21 @@ def read_insert(command):
         print("ok")
         return command_name, insert_data
     else:
-        print("wrong input")
-
-name, data = read_insert("INSERT cats (\"2\", \"Pushok\", \"Fish\")")
-
-print(name, data)
+        print("invalid syntax")
 
 
+
+
+
+def read_delete(command):
+    pattern = r'(DELETE|delete)\s((FROM|from)\s)?[A-Za-z\d]+(\s(WHERE|where)\s[A-Za-z\d]+\s(=|!=)\s\"[A-Za-z\d]+\")?'
+    if re.match(pattern, command):
+        command_name = command.split()[0]
+        if re.search(r'(WHERE|where)', command):
+            cond = re.findall(r'[A-Za-z\d]+\s(=|!=)\s\"[A-Za-z\d]+\"')
+        return command_name, cond
+    else:
+        print("invalid syntax")
+
+
+print(read_delete("DELETE cats"))
