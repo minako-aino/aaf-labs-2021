@@ -15,6 +15,7 @@
     - CREATE
     - INSERT
     - DELETE
+    - SELECT * FROM table (for testing purposes)
 
 [25-11-2021] 
   - commands realization - p2
