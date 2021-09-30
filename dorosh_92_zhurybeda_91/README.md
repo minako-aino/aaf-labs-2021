@@ -8,7 +8,7 @@
 ### Schedule
 [14-10-2021] 
  - commands parsings	   
- - create appropriate regex for each of cases
+ - create appropriate realization for each of the cases
 
 [27-10-2021] 
  - commands realization - p1	   
