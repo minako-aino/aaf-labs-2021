@@ -63,7 +63,9 @@ def lexical_analysis(characters):
         (r'=', TokenType.T_EQ),
         (r'OR', TokenType.T_OR),
         (r'AND', TokenType.T_AND),
-        (r'[A-z“”]+', TokenType.T_STR)}
+        (r'[A-z“”]+', TokenType.T_STR)
+
+        }
 
     pos = 0
     tokens = []
@@ -75,9 +77,8 @@ def lexical_analysis(characters):
             match = regex.match(characters, pos)
             if match:
                 text = match.group(0)
-                if tag:
-                    token = Node(tag, value=text)
-                    tokens.append(token)
+                token = Node(tag, value=text)
+                tokens.append(token)
                 break
         if not match:
             sys.stderr.write('Illegal character: %s\n' % characters[pos])
@@ -144,6 +145,8 @@ def parse(inputstring):
 
 
 tokens = lexical_analysis("(name<=“Murzik”)OR(name=“Pushok”)")
+
+
 for token in tokens:
     print(token.value, token.token_type)
-# parse_e3(expr)
+
