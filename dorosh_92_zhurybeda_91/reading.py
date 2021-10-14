@@ -7,8 +7,6 @@ def many_lines_input():
     contents = []
     while True:
         line = input()
-
-# end with ;
         if line.find(";") != -1:
             line = line[:line.find(";")]
             contents.append(line)
@@ -34,19 +32,15 @@ def find_between(s, first, last):
 
 
 def read_create(command):
-    pattern = "(CREATE|create)\s[A-Za-z_\d]+\s\(([A-Za-z0-9_]+,?(\s(INDEXED|indexed),)?\s?)+\)"
-    if re.match(pattern, command):
-        table_name = command.split()[1]
-        columns_name = find_between(command, "(", ")").split(", ")
-        indexation = {}
-        for name in columns_name:
-            if re.search(r"INDEXED|indexed", name):
-                indexation[name] = 1
-            else:
-                indexation[name] = 0
 
-    else:
-        print("invalid syntax")
+    table_name = command.split()[1]
+    columns_name = find_between(command, "(", ")").split(", ")
+    indexation = {}
+    for name in columns_name:
+        if re.search(r"INDEXED|indexed", name):
+            indexation[name] = 1
+        else:
+            indexation[name] = 0
     return table_name, columns_name, indexation
 
 
@@ -58,15 +52,12 @@ def read_create(command):
 
 
 def read_insert(command):
-    pattern = "(INSERT|insert)\s((INTO|into)\s)?[A-Za-z_\d]+\s\(([\"A-Za-z\d],?\s?)+\)"
-    if re.match(pattern, command):
-        command_name = command.split()[0]
-        insert_data = find_between(command, "(", ")").split(", ")
-        for data in range(len(insert_data)):
-            insert_data[data] = find_between(insert_data[data], "\"", "\"")
-        return command_name, insert_data
-    else:
-        print("invalid syntax")
+    command_name = command.split()[0]
+    insert_data = find_between(command, "(", ")").split(", ")
+    for data in range(len(insert_data)):
+        insert_data[data] = find_between(insert_data[data], "“", "”")
+    return command_name, insert_data
+
 
 
 def read_select(command):
@@ -96,5 +87,27 @@ def read_delete(command):
     else:
         tab_name = re.split(r'(FROM|from)', command)[-1]
         return command_name, tab_name
+
+CREATE_PATTERN = r"(CREATE|create)\s[A-Za-z_\d]+\s\(([A-Za-z0-9_]+,?(\s(INDEXED|indexed),)?\s?)+\)"
+INSERT_PATTERN = r"(INSERT|insert)\s((INTO|into)\s)?[A-Za-z_\d]+\s\(([“”A-Za-z\d],?\s?)+\)"
+SELECT_PATTERN1 = r"(SELECT|select)\s([A-z\*\d]+\s(FROM|from)\s[A-z]+)"
+SELECT_PATTERN2 = r"(SELECT|select)\s([A-z,\s]+)(WHERE|where)\s[A-z\d\(\)\s<>=!“”]+"
+DELETE_PATTERN1 = r"(DELETE|delete)\s(FROM|from)\s[A-z]+"
+DELETE_PATTERN2 = r"(DELETE|delete)\s([A-z,\s]+)(WHERE|where)\s[A-z\d\(\)\s<>=!“”]+"
+
+
+def full_parse(command):
+    if re.match(CREATE_PATTERN, command):
+        return read_create(command)
+    elif re.match(INSERT_PATTERN, command):
+        return read_insert(command)
+    elif re.match(SELECT_PATTERN1, command) or re.match(SELECT_PATTERN2, command):
+        return read_select(command)
+    elif re.match(DELETE_PATTERN1, command) or re.match(DELETE_PATTERN2, command):
+        return read_delete(command)
+    else:
+        raise("Wrong input")
+
+
 
 

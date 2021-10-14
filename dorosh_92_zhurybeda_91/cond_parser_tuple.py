@@ -65,7 +65,6 @@ def parse(inputstring):
 
 
 
-# ast = parse("((name <= “C”) OR (name >= “X”)) OR (name = “Petya”)")
 # print(ast.value)
 # print(ast.children[1].value)
 # print(ast.children[1].children)

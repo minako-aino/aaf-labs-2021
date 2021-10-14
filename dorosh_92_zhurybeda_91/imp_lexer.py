@@ -11,7 +11,7 @@ token_exprs = [
     (r'>=', "T_MORE_EQ"),
     (r'>', "T_MORE"),
     (r'=', "T_EQ"),
-    (r'!=', "T_ENEQ"),
+    (r'!=', "T_UNEQ"),
     (r'and|AND', "T_AND"),
     (r'or|OR', "T_OR"),
     (r'\|', "T_OR"),
