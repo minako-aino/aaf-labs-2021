@@ -72,7 +72,7 @@ def read_select(command):
     else:
         col_name = re.findall(rf'{command_name}(.*?)(FROM|from)', command)[0][1]
         tab_name = re.split(r'(FROM|from)', command)[-1]
-        return command_name, tab_name
+        return command_name, col_name, tab_name
 
 
 
