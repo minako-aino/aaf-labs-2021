@@ -65,10 +65,10 @@ def parse(inputstring):
 
 
 
-ast = parse("(name<=“Murzik”)OR(name=“Pushok”)AND(name=“KALI”)")
-print(ast.value)
-print(ast.children[1].value)
-print(ast.children[1].children)
+# ast = parse("((name <= “C”) OR (name >= “X”)) OR (name = “Petya”)")
+# print(ast.value)
+# print(ast.children[1].value)
+# print(ast.children[1].children)
 
 
 

@@ -1,5 +1,5 @@
 import re
-
+from cond_parser_tuple import *
 # add "" support, and ignore ‘ ‘, ‘\t‘, ‘\r‘, ‘\n‘
 
 
@@ -64,24 +64,37 @@ def read_insert(command):
         insert_data = find_between(command, "(", ")").split(", ")
         for data in range(len(insert_data)):
             insert_data[data] = find_between(insert_data[data], "\"", "\"")
-        print("ok")
         return command_name, insert_data
     else:
         print("invalid syntax")
 
 
+def read_select(command):
+    command_name = command.split()[0]
+    if re.search(r"(WHERE|where)", command):
+        col_name = re.findall(r'(SELECT|select)(.*?)(FROM|from)', command)[0][1]
+        col_name = col_name.split(",")
+        tab_name = re.findall(r'(FROM|from)(.*?)(WHERE|where)', command)[0][1]
+        cond = re.split(r'(WHERE|where)', command)[-1]
+        cond = parse(cond)
+        return command_name, tab_name, col_name, cond
+    else:
+        col_name = re.findall(rf'{command_name}(.*?)(FROM|from)', command)[0][1]
+        tab_name = re.split(r'(FROM|from)', command)[-1]
+        return command_name, tab_name
+
 
 
 
 def read_delete(command):
-    pattern = r'(DELETE|delete)\s((FROM|from)\s)?[A-Za-z\d]+(\s(WHERE|where)\s[A-Za-z\d]+\s(=|!=)\s\"[A-Za-z\d]+\")?'
-    if re.match(pattern, command):
-        command_name = command.split()[0]
-        if re.search(r'(WHERE|where)', command):
-            cond = re.findall(r'[A-Za-z\d]+\s(=|!=)\s\"[A-Za-z\d]+\"')
-        return command_name, cond
+    command_name = command.split()[0]
+    if re.search(r"(WHERE|where)", command):
+        tab_name = re.findall(r'(DELETE|delete)(.*?)(WHERE|where)', command)[0][1]
+        cond = re.split(r'(WHERE|where)', command)[-1]
+        cond = parse(cond)
+        return command_name, tab_name, cond
     else:
-        print("invalid syntax")
+        tab_name = re.split(r'(FROM|from)', command)[-1]
+        return command_name, tab_name
 
 
-print(read_delete("DELETE cats"))
