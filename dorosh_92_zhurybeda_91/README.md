@@ -10,13 +10,14 @@
  - commands parsings	   
  - create appropriate realization for each of the cases
 
-[27-10-2021] 
+[11-11-2021] 
  - commands realization - p1	   
     - CREATE
     - INSERT
-    - DELETE
+    - DELETE * FROM table 
     - SELECT * FROM table (for testing purposes)
 
-[25-11-2021] 
+[09-12-2021] 
   - commands realization - p2
     - SELECT [WHERE ]
+    - DELETE [WHERE ]
