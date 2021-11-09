@@ -14,9 +14,9 @@ def match(tokens, token):
     else:
         raise Exception('Invalid syntax on token {}'.format(tokens[0][1]))
 
-def parse_e3(tokens):
 
-    if tokens[0][1] == "T_STR":
+def parse_e3(tokens):
+    if tokens[0][1] in ["T_STR", "T_VALUE"]:
         return tokens.pop(0)
 
     match(tokens, "T_LPAR")
@@ -24,6 +24,7 @@ def parse_e3(tokens):
     match(tokens, "T_RPAR")
 
     return expression
+
 
 def parse_e2(tokens):
     left_node = parse_e3(tokens)
@@ -57,20 +58,34 @@ def parse_e(tokens):
     return left_node
 
 
-def parse(inputstring):
-    tokens = imp_lex(inputstring)
+def parse(tokens):
     ast = parse_e(tokens)
     match(tokens, 'T_END')
     return ast
 
 
+# TODO create cond print
+def _print_ast(ast):
+    if type(ast) is Node:
+        print(ast.value + ' ')
+        _print_ast(ast.children[1])
+        _print_ast(ast.children[0])
+    elif type(ast) is list:
+        print(ast[0])
+        print(ast[1])
 
-# print(ast.value)
-# print(ast.children[1].value)
-# print(ast.children[1].children)
+
+def print_ast(ast):
+    if ast.value is not None:
+        _print_ast(ast.value)
 
 
-
-
-
-
+com = imp_lex('((name <= "C") OR (name >= "X"))')
+ast = parse(com)
+# print(type(ast) == Node)
+# print_ast(ast)
+# ast = parse('(name <= "Murzik") Or (name = "Pushok")')
+print(ast.value)
+print(ast.children[0].value)
+print(ast.children[0].children[0])
+print(ast.children[0].children[1])
