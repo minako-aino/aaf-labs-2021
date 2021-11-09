@@ -62,7 +62,7 @@ def parse_insert(tokens):
 
 def parse_select(tokens):
     col_name = []
-    cond = None
+    icond = None
     if tokens[0][1] == "T_SELECT":
         com_name = tokens[0][1]
         for i in range(len(tokens)):
@@ -119,13 +119,13 @@ def all_parse(input):
     elif tokens[0][1] == "T_INSERT":
         return parse_insert()
     elif tokens[0][1] == "T_SELECT":
-        return parse_slect()
+        return parse_select()
     elif tokens[0][1] == "T_DELETE":
         return parse_delete()
     else:
         print("error")
 
-#TODO debug CLI, crash except
+#TODO debug CLI
 def many_lines_input():
     contents = []
     while True:
@@ -134,6 +134,8 @@ def many_lines_input():
             line = line[:line.find(";")]
             contents.append(line)
             break
+        elif line == ".EXIT":
+            return line
         else:
             contents.append(line)
 # spaces del
@@ -143,11 +145,16 @@ def many_lines_input():
 
 
 def parse666():
-    while True:
-        string = many_lines_input()
-        print(all_parse(string))
-
-
+    try:
+        while True:
+            string = many_lines_input()
+            if string == ".EXIT":
+                break
+            else:
+                print(all_parse(string))
+    except:
+        print("error")
+        parse666()
 
 
 if __name__ == "__main__":
