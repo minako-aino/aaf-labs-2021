@@ -35,7 +35,7 @@ def parse_create(tokens):
         if tokens[-2][1] != "T_RPAR" or tokens[-1][1] != "T_END":
             print("syntx error")
             return None
-        return com_name, table_name, col_name
+        return com_name, table_name[1], col_name
 
 
 # com = imp_lex("CREATE cats (id INDEXED, name INDEXED, favourite_food)")
@@ -87,12 +87,7 @@ def parse_select(tokens):
 # print(parse_select(string))
 # print(parse_select(com1))
 
-com1 = imp_lex('DELETE FROM cats')
-com2 = imp_lex('DELETE cats WHERE name = "Murzik"')
-com3 = imp_lex('DELETE cats WHERE id != "2"')
-print(com1)
-print(com2)
-print(com3)
+
 def parse_delete(tokens):
     icond = None
     if tokens[0][1] == "T_DELETE":
@@ -110,7 +105,50 @@ def parse_delete(tokens):
                     tab_name = tokens[i][0]
             return com_name, tab_name
 
-print(parse_delete(com1))
-print(parse_delete(com2))
-print(parse_delete(com3))
+# com1 = imp_lex('DELETE FROM cats')
+# com2 = imp_lex('DELETE cats WHERE name = "Murzik"')
+# com3 = imp_lex('DELETE cats WHERE id != "2"')
+# print(parse_delete(com1))
+# print(parse_delete(com2))
+# print(parse_delete(com3))
 
+def all_parse(input):
+    tokens = imp_lex(input)
+    if tokens[0][1] == "T_CREATE":
+        return parse_create(tokens)
+    elif tokens[0][1] == "T_INSERT":
+        return parse_insert()
+    elif tokens[0][1] == "T_SELECT":
+        return parse_slect()
+    elif tokens[0][1] == "T_DELETE":
+        return parse_delete()
+    else:
+        print("error")
+
+#TODO debug CLI, crash except
+def many_lines_input():
+    contents = []
+    while True:
+        line = input()
+        if line.find(";") != -1:
+            line = line[:line.find(";")]
+            contents.append(line)
+            break
+        else:
+            contents.append(line)
+# spaces del
+    str1 = " ".join(contents)
+    return " ".join(str1.split())
+
+
+
+def parse666():
+    while True:
+        string = many_lines_input()
+        print(all_parse(string))
+
+
+
+
+if __name__ == "__main__":
+    parse666()
