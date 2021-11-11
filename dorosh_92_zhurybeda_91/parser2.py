@@ -147,11 +147,14 @@ def many_lines_input():
 def parse666():
     try:
         string = many_lines_input()
-        return all_parse(string)
+        if string == ".EXIT":
+            return string
+        else:
+            return all_parse(string)
     except:
         print("invalid command")
 
 
 
-# command = all_parse('insert into dog("ff","aaa")')
+# command = parse666()
 # print(command)

@@ -48,9 +48,18 @@ class DB:
                     break
 
 # db = DB()
-# db.create("dogs",["aaa","aaaaaa"])
+# db.create("create dog(ff,aaa)")
 # db.insert("dogs", ["s",'ff'])
 # db.insert("dogs", ["s",'ff'])
 # db.insert("dogs", ["s",'ff'])
 # db.select("dogs", ["*"], )
 # db.delete("dogs")
+
+# create dog(ff,aaa);
+# Table dog has been created
+# insert into dog("sss","shiba);
+# insertion failed
+# insert into dog("sss","shiba';
+# invalid command
+# insert into dog("sss","shiba");
+# invalid command
