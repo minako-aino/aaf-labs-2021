@@ -21,6 +21,7 @@ def parse_command(command: str):
     return com_name, table_name
 
 
+
 print(parse_command("CREATE cats (id INDEXED, name INDEXED, favourite_food)"))
 
 string = imp_lex("CREATE cats (id INDEXED, name INDEXED, favourite_food)")
