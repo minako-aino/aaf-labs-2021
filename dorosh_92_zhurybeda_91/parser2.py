@@ -35,7 +35,7 @@ def parse_create(tokens):
         if tokens[-2][1] != "T_RPAR" or tokens[-1][1] != "T_END":
             print("syntx error")
             return None
-        return com_name, table_name[1], col_name
+        return com_name, table_name[0], col_name
 
 
 # com = imp_lex("CREATE cats (id INDEXED, name INDEXED, favourite_food)")
@@ -45,7 +45,7 @@ def parse_create(tokens):
 def parse_insert(tokens):
     if tokens[0][1] == "T_INSERT":
         com_name = tokens.pop(0)
-        table_name = tokens.pop(0)
+        table_name = tokens.pop(0)[0]
         match(tokens, "T_LPAR")
         col_name = []
         for i in range(len(tokens)):
@@ -64,7 +64,7 @@ def parse_select(tokens):
     col_name = []
     icond = None
     if tokens[0][1] == "T_SELECT":
-        com_name = tokens[0][1]
+        com_name = tokens[0]
         for i in range(len(tokens)):
             if tokens[i][1] == "T_WHERE":
                 icond = i
@@ -91,7 +91,7 @@ def parse_select(tokens):
 def parse_delete(tokens):
     icond = None
     if tokens[0][1] == "T_DELETE":
-        com_name = tokens[0][1]
+        com_name = tokens[0]
         for i in range(len(tokens)):
             if tokens[i][1] == "T_WHERE":
                 icond = i
@@ -117,11 +117,11 @@ def all_parse(input):
     if tokens[0][1] == "T_CREATE":
         return parse_create(tokens)
     elif tokens[0][1] == "T_INSERT":
-        return parse_insert()
+        return parse_insert(tokens)
     elif tokens[0][1] == "T_SELECT":
-        return parse_select()
+        return parse_select(tokens)
     elif tokens[0][1] == "T_DELETE":
-        return parse_delete()
+        return parse_delete(tokens)
     else:
         print("error")
 
@@ -146,16 +146,12 @@ def many_lines_input():
 
 def parse666():
     try:
-        while True:
-            string = many_lines_input()
-            if string == ".EXIT":
-                break
-            else:
-                print(all_parse(string))
+        string = many_lines_input()
+        return all_parse(string)
     except:
-        print("error")
-        parse666()
+        print("invalid command")
 
 
-if __name__ == "__main__":
-    parse666()
+
+# command = all_parse('insert into dog("ff","aaa")')
+# print(command)
