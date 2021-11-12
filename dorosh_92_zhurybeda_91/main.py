@@ -1,10 +1,11 @@
 from db import *
 from parser2 import *
 
+
 def process():
     db = DB()
-    try:
-        while True:
+    while True:
+        try:
             command = parse666()
             if command == ".EXIT":
                 break
@@ -21,11 +22,19 @@ def process():
                     elif len(command) == 2:
                         db.delete(command[1])
                 else:
+                    process()
                     print("error")
-    except:
-        process()
+        except:
+            process()
+
+
 if __name__ == '__main__':
     process()
 
-
-
+# db = DB()
+#
+# db.create('t', ['d','l'])
+# db.insert('t', ['aa','bb'])
+# db.select('t', ["*"])
+# db.delete('t')
+# db.select('t', ["*"])

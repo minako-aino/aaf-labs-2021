@@ -28,14 +28,15 @@ class DB:
                 print("table not exist")
 
     def select(self, table_name, col_name, cond=None):
-        if cond:
-            pass
-        else:
-            if col_name == ["*"]:
-                for table in self.tables:
-                    if table.table_name == table_name:
-                        table.select()
-                        break
+        for table in self.tables:
+            if table.table_name == table_name:
+                if cond:
+                    pass
+                else:
+                    table.select(col_name)
+                    break
+            else:
+                print("table not exist")
 
     def delete(self, table_name, cond=None):
         if cond:
@@ -44,17 +45,19 @@ class DB:
             for table in self.tables:
                 if table.table_name == table_name:
                     print(f"table {table.table_name} was dropped")
-                    self.tables.pop(self.tables.index(table))
+                    table.value.clear()
                     break
 
 # db = DB()
-# db.create("create dog(ff,aaa)")
-# db.insert("dogs", ["s",'ff'])
-# db.insert("dogs", ["s",'ff'])
-# db.insert("dogs", ["s",'ff'])
-# db.select("dogs", ["*"], )
+# db.create("dogs", ['s', 'ff', 'aaa'])
+# db.insert("dogs", ["s1", 'ff1', 'aaa1'])
+# db.insert("dogs", ["s2", 'ff2', 'aaa2'])
+# db.insert("dogs", ["s3", 'ff3', 'aaa3'])
+# db.select("dogs", ["*"])
+# db.select("dogs", ["aaa", "ff"])
+# db.select("dogs", ["aaa", "ff", "ff333"])
 # db.delete("dogs")
-
+# db.select("dogs", ["*"])
 # create dog(ff,aaa);
 # Table dog has been created
 # insert into dog("sss","shiba);
