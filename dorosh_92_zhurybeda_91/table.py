@@ -41,13 +41,13 @@ class Table:
             print("column not exist")
 
 
-table = Table()
-table.create("dogs", ['s', 'ff', 'aaa'])
-table.insert(["s1", 'ff1', 'aaa1'])
-table.insert(["s2", 'ff2', 'aaa2'])
-table.insert(["s3", 'ff3', 'aaa3'])
-table.select(["*"])
-table.select(["aaa", "ff"])
+# table = Table()
+# table.create("dogs", ['s', 'ff', 'aaa'])
+# table.insert(["s1", 'ff1', 'aaa1'])
+# table.insert(["s2", 'ff2', 'aaa2'])
+# table.insert(["s3", 'ff3', 'aaa3'])
+# table.select(["*"])
+# table.select(["aaa", "ff"])
 # db.delete("dogs")
 
 
