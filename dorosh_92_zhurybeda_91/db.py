@@ -34,7 +34,7 @@ class DB:
                     pass
                 else:
                     table.select(col_name)
-                    break
+                break
             else:
                 print("table not exist")
 

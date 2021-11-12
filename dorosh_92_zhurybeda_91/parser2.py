@@ -116,7 +116,7 @@ def many_lines_input():
             line = line[:line.find(";")]
             contents.append(line)
             break
-        elif line == ".EXIT":
+        elif re.match( r"\.(?i)exit", line):
             return line
         else:
             contents.append(line)
@@ -128,10 +128,12 @@ def many_lines_input():
 
 def parse666():
     string = many_lines_input()
-    if string == ".EXIT":
-        return string
+    if re.match( r"\.(?i)exit", string):
+        return ".EXIT"
     else:
         return all_parse(string)
 
 
-
+# com = all_parse("select a, c from table")
+# com = parse666()
+# print(com)

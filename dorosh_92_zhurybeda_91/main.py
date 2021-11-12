@@ -11,7 +11,7 @@ def process():
                 break
             else:
                 if command[0][1] == "T_CREATE":
-                    db.create(command[1], command[2].keys())
+                    db.create(command[1], list(command[2].keys()))
                 elif command[0][1] == "T_INSERT":
                     db.insert(command[1], command[2])
                 elif command[0][1] == "T_SELECT":
@@ -32,9 +32,13 @@ if __name__ == '__main__':
     process()
 
 # db = DB()
-#
-# db.create('t', ['d','l'])
-# db.insert('t', ['aa','bb'])
+# print(all_parse("create t (a,b,c)"))
+# db.create('t', ['a', 'b', 'c'])
+# db.insert('t', ['aa','bb', 'cc'])
+# db.insert('t', ['aaa','bbb', 'ccc'])
+# print(all_parse("select * from t"))
 # db.select('t', ["*"])
-# db.delete('t')
+# print(all_parse("select c, a from t"))
+# db.select('t', ['c','a'])
+
 # db.select('t', ["*"])
