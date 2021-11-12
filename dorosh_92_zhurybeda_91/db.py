@@ -39,15 +39,16 @@ class DB:
                 print("table not exist")
 
     def delete(self, table_name, cond=None):
-        if cond:
-            pass
-        else:
-            for table in self.tables:
-                if table.table_name == table_name:
+        for table in self.tables:
+            if table.table_name == table_name:
+                if cond:
+                    pass
+                else:
                     print(f"table {table.table_name} was dropped")
                     table.value.clear()
                     break
-
+            else:
+                print("table not exist")
 # db = DB()
 # db.create("dogs", ['s', 'ff', 'aaa'])
 # db.insert("dogs", ["s1", 'ff1', 'aaa1'])
@@ -56,6 +57,7 @@ class DB:
 # db.select("dogs", ["*"])
 # db.select("dogs", ["aaa", "ff"])
 # db.select("dogs", ["aaa", "ff", "ff333"])
+# db.delete("dog")
 # db.delete("dogs")
 # db.select("dogs", ["*"])
 # create dog(ff,aaa);
