@@ -128,7 +128,7 @@ def many_lines_input():
 
 def parse666():
     string = many_lines_input()
-    if re.match( r"\.(?i)exit", string):
+    if re.match(r"(?i)\.exit", string):
         return ".EXIT"
     else:
         return all_parse(string)
@@ -137,3 +137,6 @@ def parse666():
 # com = all_parse("select a, c from table")
 # com = parse666()
 # print(com)
+
+# if re.match(r"(?i)\.exit", ".eXit"):
+#     print(".EXIT")

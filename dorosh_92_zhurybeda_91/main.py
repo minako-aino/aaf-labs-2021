@@ -2,8 +2,7 @@ from db import *
 from parser2 import *
 
 
-def process():
-    db = DB()
+def process(db):
     while True:
         try:
             command = parse666()
@@ -22,14 +21,15 @@ def process():
                     elif len(command) == 2:
                         db.delete(command[1])
                 else:
-                    process()
+                    process(db)
                     print("error")
         except:
-            process()
+            process(db)
 
 
 if __name__ == '__main__':
-    process()
+    db = DB()
+    process(db)
 
 # db = DB()
 # print(all_parse("create t (a,b,c)"))
