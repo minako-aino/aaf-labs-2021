@@ -25,7 +25,7 @@ token_exprs = [
     (r'(?i)or', "T_OR"),
     (r'\|', "T_OR"),
     # (r'[A-z\d]+', "NAME"),
-    (r'\"[A-z\d]+\"', "T_VALUE"),
+    (r'\"[A-z\d\s.,_]+\"', "T_VALUE"),
     (r'[A-z\d"]+', "T_STR"),
     (r'\*', "T_ALL"),
     (None, "T_END")

@@ -20,20 +20,35 @@ class Table:
         else:
             print("insertion failed")
 
-    def select(self):
-        print(tabulate(self.value, headers=self.col_name, tablefmt='orgtbl'))
+    def select(self, col_name):
+        if col_name == ['*']:
+            print(tabulate(self.value, headers=self.col_name, tablefmt='orgtbl'))
+        elif set(self.col_name) >= set(col_name):
+            icol = []
+            for i in range(len(col_name)):
+                for j in range(len(self.col_name)):
+                    if self.col_name[j] == col_name[i]:
+                        icol.append(j)
+            value = []
+            for ind in icol:
+                temp = []
+                for i in self.value:
+                    temp.append(i[ind])
+                value.append(temp)
+            value = list(map(list, zip(*value)))
+            print(tabulate(value, headers=col_name, tablefmt='orgtbl'))
+        else:
+            print("column not exist")
+
 
 # table = Table()
-# table.create(1, ["name","name2","name1"])
-# table.insert(["nam","nam2","nam1"])
-# table.insert(["namq","namq2","namq1"])
-# table.select()
-#
-# # print(table.value[0][0])
-#
-#
-# root = Node(12)
-# root.insert(6)
-# root.insert(14)
-# root.insert(15)
-# root.print_tree()
+# table.create("dogs", ['s', 'ff', 'aaa'])
+# table.insert(["s1", 'ff1', 'aaa1'])
+# table.insert(["s2", 'ff2', 'aaa2'])
+# table.insert(["s3", 'ff3', 'aaa3'])
+# table.select(["*"])
+# table.select(["aaa", "ff"])
+# db.delete("dogs")
+
+
+

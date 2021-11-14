@@ -2,24 +2,6 @@ import re
 from cond_parser_tuple import *
 from imp_lexer import *
 
-token_exprs = [
-    (r'[\s\n\t\r]+', None),
-    # (r'#[^\n]*', None),
-    (r'(?i)create', "T_CREATE"),
-    (r'(?i)delete', "T_DELETE"),
-    (r'(?i)insert', "T_INSERT"),
-    (r'(?i)select', "T_SELECT"),
-    (r'((?i)into)|((?i)from)', None),
-    (r'(?i)INDEXED', "T_INDEXED"),
-    (r',', "T_SEP"),
-    (r'\(', 'T_LPAR'),
-    (r'\)', "T_RPAR"),
-    (r'[A-z\d\"_]+', "T_STR"),
-    (r'\*', "T_ALL"),
-    (None, "T_END")
-]
-
-
 def parse_create(tokens):
     if tokens[0][1] == "T_CREATE":
         com_name = tokens.pop(0)
@@ -134,7 +116,7 @@ def many_lines_input():
             line = line[:line.find(";")]
             contents.append(line)
             break
-        elif line == ".EXIT":
+        elif re.match( r"\.(?i)exit", line):
             return line
         else:
             contents.append(line)
@@ -145,16 +127,16 @@ def many_lines_input():
 
 
 def parse666():
-    try:
-        string = many_lines_input()
-        if string == ".EXIT":
-            return string
-        else:
-            return all_parse(string)
-    except:
-        print("invalid command")
+    string = many_lines_input()
+    if re.match(r"(?i)\.exit", string):
+        return ".EXIT"
+    else:
+        return all_parse(string)
 
 
+# com = all_parse("select a, c from table")
+# com = parse666()
+# print(com)
 
-# command = parse666()
-# print(command)
+# if re.match(r"(?i)\.exit", ".eXit"):
+#     print(".EXIT")
