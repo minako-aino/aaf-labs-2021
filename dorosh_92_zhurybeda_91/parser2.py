@@ -134,9 +134,9 @@ def parse666():
         return all_parse(string)
 
 
-# com = all_parse("select a, c from table")
+# com = all_parse('SELECT id, favourite_food FROM cats WHERE (name <= "Murzik, @#$@%$#%$^*( d") OR (name = "Pushok")')
 # com = parse666()
 # print(com)
 
-# if re.match(r"(?i)\.exit", ".eXit"):
+# if re.match(r"(?i)\.exit", ".ExIT"):
 #     print(".EXIT")

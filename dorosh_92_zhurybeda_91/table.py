@@ -22,7 +22,7 @@ class Table:
 
     def select(self, col_name):
         if col_name == ['*']:
-            print(tabulate(self.value, headers=self.col_name, tablefmt='orgtbl'))
+            print(tabulate(self.value, headers=self.col_name, tablefmt='grid'))
         elif set(self.col_name) >= set(col_name):
             icol = []
             for i in range(len(col_name)):
@@ -36,7 +36,7 @@ class Table:
                     temp.append(i[ind])
                 value.append(temp)
             value = list(map(list, zip(*value)))
-            print(tabulate(value, headers=col_name, tablefmt='orgtbl'))
+            print(tabulate(value, headers=col_name, tablefmt='grid'))
         else:
             print("column not exist")
 
