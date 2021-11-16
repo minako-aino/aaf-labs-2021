@@ -30,24 +30,30 @@ class Table:
                     if self.col_name[j] == col_name[i]:
                         icol.append(j)
             value = []
-            for ind in icol:
+            # for ind in icol:
+            #     temp = []
+            #     for i in self.value:
+            #         temp.append(i[ind])
+            #     value.append(temp)
+            # value = list(map(list, zip(*value)))
+            for row in self.value:
                 temp = []
-                for i in self.value:
-                    temp.append(i[ind])
+                for i in icol:
+                    temp.append(row[i])
                 value.append(temp)
-            value = list(map(list, zip(*value)))
             print(tabulate(value, headers=col_name, tablefmt='grid'))
         else:
             print("column not exist")
 
 
-# table = Table()
-# table.create("dogs", ['s', 'ff', 'aaa'])
-# table.insert(["s1", 'ff1', 'aaa1'])
-# table.insert(["s2", 'ff2', 'aaa2'])
-# table.insert(["s3", 'ff3', 'aaa3'])
-# table.select(["*"])
-# table.select(["aaa", "ff"])
+table = Table()
+table.create("dogs", ['s', 'ff', 'aaa'])
+table.insert(["s1", 'ff1', 'aaa1'])
+table.insert(["s2", 'ff2', 'aaa2'])
+table.insert(["s3", 'ff3', 'aaa3'])
+table.select(["*"])
+table.select(["aaa", "ff"])
+table.select(["aaa", "ff", "ff"])
 # db.delete("dogs")
 
 
