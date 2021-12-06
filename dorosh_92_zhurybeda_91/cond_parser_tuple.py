@@ -9,6 +9,8 @@ class Node:
         self.left = None
 
 
+
+
 def match(tokens, token):
     if tokens[0][1] == token:
         return tokens.pop(0)[0]
@@ -85,21 +87,64 @@ def print_ast(ast):
 
 def printPreorder(root):
     if root:
-        # First print the data of node
         print(root.value),
 
-        # Then recur on left child
         printPreorder(root.left)
 
-        # Finally recur on right child
         printPreorder(root.right)
-# com = imp_lex('((name <= "C") OR (name >= "X"))')
-# ast = parse(com)
-# print(ast)
 
-# com = imp_lex('(name <= "Murzik") OR (name = "Pushok") AND (dog = "Shiba")')
+
+def printPostorder(root):
+    if root:
+
+        printPostorder(root.left)
+
+        printPostorder(root.right)
+
+        print(root.value)
+
+
+def printInorder(root):
+    if root:
+
+        printInorder(root.left)
+
+        print(root.value),
+
+        printInorder(root.right)
+
+
+COUNT = [5]
+
+
+def print2DUtil(root, space):
+    if (root == None):
+        return
+
+    space += COUNT[0]
+
+    print2DUtil(root.right, space)
+
+    print()
+    for i in range(COUNT[0], space):
+        print(end=" ")
+    print(root.value)
+
+
+    print2DUtil(root.left, space)
+
+
+
+def print2D(root):
+    print2DUtil(root, 0)
+
+# com = imp_lex('(name <= "Murzik") OR (name = "Pushok") AND ((dog = "Shiba") OR (cat = "myau"))')
 # ast = parse(com)
-# print(ast)
+# print2D(ast)
+# printInorder(ast)
+# print("================")
+# printPostorder(ast)
+# print("===========")
 # printPreorder(ast)
 # print(ast.children[0].value)
 # print(ast.children[0].children[0])
