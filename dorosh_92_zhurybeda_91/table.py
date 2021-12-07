@@ -1,9 +1,6 @@
 from tabulate import tabulate
 
 
-# from stack import *
-
-
 class Table:
     def __init__(self):
         self.table_name = None
@@ -47,19 +44,53 @@ class Table:
         else:
             print("column not exist")
 
+    def cond_calc(self, cond):
+        stack = []
+        for i in cond:
+            if i in ["<", "=", ">"]:
+                value = stack.pop()
+                col_name = stack.pop()
+                stack.append(apply_arith_op(self, i, col_name, value))
+            elif i in ["OR", "AND"]:
+                tbl1 = stack.pop()
+                tbl2 = stack.pop()
+                stack.append(apply_set_op(i, tbl1, tbl2))
+            else:
+                stack.append(i)
+        res_table = stack.pop()
+        return res_table
+
     def cond_select(self, col_name, cond):
-        pass
+        if col_name == ["*"]:
+            res_table = self.cond_calc(cond)
+            print(tabulate(res_table.values(), headers=self.col_name, tablefmt='grid'))
+        elif set(self.col_name) >= set(col_name):
+            res_table = self.cond_calc(cond)
+            icol = []
+            for i in range(len(col_name)):
+                for j in range(len(self.col_name)):
+                    if self.col_name[j] == col_name[i]:
+                        icol.append(j)
+            value = []
+            for row in res_table.values():
+                temp = []
+                for i in icol:
+                    temp.append(row[i])
+                value.append(temp)
+            print(tabulate(value, headers=col_name, tablefmt='grid'))
+        else:
+            print("column not exist")
 
 
-def apply_sort_op(table, op, col_name, value):
+def apply_arith_op(table, op, col_name, value):
     if op == '=':
         temp = {}
         ind = table.col_name.index(col_name)
         for key, row in table.value.items():
             if row[ind] == value:
                 temp[key] = row
-        print(temp)
-        print(tabulate(list(temp.values()), headers=table.col_name, tablefmt='grid'))
+        # print(temp)
+        # print(tabulate(list(temp.values()), headers=table.col_name, tablefmt='grid'))
         return temp
     elif op == '>':
         temp = {}
@@ -95,20 +126,22 @@ def apply_set_op(op, table1, table2):
         res = dict(sorted(res.items()))
         return res
 
+# table = Table()
+# table.create("dogs", ['s', 'ff', 'aaa'])
+# table.insert(["s1", 'ff2', 'aaa1'])
+# table.insert(["s2", 'ff2', 'aaa2'])
+# table.insert(["nnn1", 'ff2', 'aaa1'])
+# table.insert(["s3", 'f', 'aaa3'])
+# table.insert(["nnn1", 'fr1', 'aaa1'])
+# table.insert(["s3", 'ff2', 'aaa3'])
+# table.simple_select(["*"])
+# table.cond_select(["*"], ['aaa', 'aaa1', "=", 'ff', 'ff', "<", "OR"])
 
-table = Table()
-table.create("dogs", ['s', 'ff', 'aaa'])
-table.insert(["s1", 'ff2', 'aaa1'])
-table.insert(["s2", 'ff2', 'aaa2'])
-table.insert(["nnn1", 'ff2', 'aaa1'])
-table.insert(["s3", 'ff3', 'aaa3'])
-table.insert(["nnn1", 'fr1', 'aaa1'])
-table.insert(["s3", 'ff2', 'aaa3'])
-table.simple_select(["*"])
-
-table1 = apply_sort_op(table, "=", "aaa", "aaa1")
-table2 = apply_sort_op(table, "=", "ff", "ff2")
-
+# table1 = apply_arith_op(table, "=", "aaa", "aaa1")
+# table2 = apply_arith_op(table, "=", "ff", "ff2")
+# print(table1)
+# print(table2)
+# print(apply_set_op("OR", table1, table2))
 
 # table.apply_set_op("OR", [[1,2,3], [1,2,3], [1,2,3]], [[1,2,2], [1,2,4], [1,2,3]])
 # table.simple_select(["aaa", "ff", "ff"])

@@ -1,14 +1,18 @@
 from imp_lexer import *
 
 
+def find_between(s, first, last):
+    start = s.index(first) + len(first)
+    end = s.index(last, start)
+    return s[start:end]
+
+
 class Node:
     def __init__(self, token_type, value=None):
         self.token_type = token_type
         self.value = value
         self.right = None
         self.left = None
-
-
 
 
 def match(tokens, token):
@@ -19,8 +23,12 @@ def match(tokens, token):
 
 
 def parse_e3(tokens):
-    if tokens[0][1] in ["T_STR", "T_VALUE"]:
+    if tokens[0][1] == "T_STR":
         node = Node(tokens[0][1], value=tokens[0][0])
+        tokens.pop(0)[0]
+        return node
+    elif tokens[0][1] == "T_VALUE":
+        node = Node(tokens[0][1], value=find_between(tokens[0][0], '"', '"'))
         tokens.pop(0)[0]
         return node
 
@@ -96,7 +104,6 @@ def printPreorder(root):
 
 def printPostorder(root):
     if root:
-
         printPostorder(root.left)
 
         printPostorder(root.right)
@@ -106,7 +113,6 @@ def printPostorder(root):
 
 def printInorder(root):
     if root:
-
         printInorder(root.left)
 
         print(root.value),
@@ -130,22 +136,22 @@ def print2DUtil(root, space):
         print(end=" ")
     print(root.value)
 
-
     print2DUtil(root.left, space)
-
 
 
 def print2D(root):
     print2DUtil(root, 0)
 
-def postorder(root):
+
+def postorder(root, lst=[]):
     if root:
+        postorder(root.left, lst)
 
-        printPostorder(root.left)
+        postorder(root.right, lst)
+        lst.append(root.value)
 
-        printPostorder(root.right)
+        return root.value, lst
 
-        return(root.value)
 
 # com = imp_lex('(name <= "Murzik") OR (name = "Pushok") AND ((dog = "Shiba") OR (cat = "stas") AND (vidra = "jeka"))')
 # ast = parse(com)
@@ -158,4 +164,3 @@ def postorder(root):
 # print(ast.children[0].value)
 # print(ast.children[0].children[0])
 # print(ast.children[0].children[1])
-# print(postorder(ast))

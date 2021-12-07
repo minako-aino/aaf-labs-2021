@@ -1,5 +1,6 @@
 from table import *
-
+from cond_parser_tuple import postorder #parse
+# from imp_lexer import imp_lex
 
 class DB:
 
@@ -31,7 +32,8 @@ class DB:
         for table in self.tables:
             if table.table_name == table_name:
                 if cond:
-                    pass
+                    _, stacked_cond = postorder(cond)
+                    table.cond_select(col_name, stacked_cond)
                 else:
                     table.simple_select(col_name)
                 break
@@ -51,15 +53,21 @@ class DB:
                 print("table not exist")
 # db = DB()
 # db.create("dogs", ['s', 'ff', 'aaa'])
-# db.insert("dogs", ["s1", 'ff1', 'aaa1'])
+# db.insert("dogs", ["s1", 'ff2', 'aaa1'])
 # db.insert("dogs", ["s2", 'ff2', 'aaa2'])
-# db.insert("dogs", ["s3", 'ff3', 'aaa3'])
+# db.insert("dogs", ["nnn1", 'ff2', 'aaa1'])
+# db.insert("dogs", ["s3", 'f', 'aaa3'])
+# db.insert("dogs", ["nnn1", 'fr1', 'aaa1'])
+# db.insert("dogs", ["s3", 'ff2', 'aaa1'])
 # db.select("dogs", ["*"])
+# cond = imp_lex('(aaa ="aaa1") AND ( ff > "ff")')
+# ast = parse(cond)
+# print(postorder(ast))
+# db.select("dogs", ["*"], ast)
 # db.select("dogs", ["aaa", "ff"])
 # db.select("dogs", ["aaa", "ff", "ff333"])
 # db.delete("dog")
 # db.delete("dogs")
-# db.select("dogs", ["*"])
 # create dog(ff,aaa);
 # Table dog has been created
 # insert into dog("sss","shiba);
