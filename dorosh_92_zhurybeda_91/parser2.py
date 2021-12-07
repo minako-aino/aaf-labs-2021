@@ -136,9 +136,11 @@ def parse666():
 
 # com = all_parse('SELECT id, favourite_food FROM cats WHERE name = "Murzik AND dog = shiba')
 # com1 = all_parse('SELECT id, favourite_food FROM cats')
+# com3 = all_parse('DELETE cats WHERE name = "Murzik"')
 # com = parse666()
 # print(com)
 # print(com1)
+# print(com3)
 
 # if re.match(r"(?i)\.exit", ".ExIT"):
 #     print(".EXIT")

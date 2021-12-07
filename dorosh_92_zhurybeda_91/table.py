@@ -47,7 +47,7 @@ class Table:
     def cond_calc(self, cond):
         stack = []
         for i in cond:
-            if i in ["<", "=", ">"]:
+            if i in ["<", "=", ">", ">=", "<="]:
                 value = stack.pop()
                 col_name = stack.pop()
                 stack.append(apply_arith_op(self, i, col_name, value))
@@ -81,6 +81,15 @@ class Table:
         else:
             print("column not exist")
 
+    def delete_rows(self, cond):
+        rows_ind = list(self.cond_calc(cond).keys())
+        for ind in rows_ind:
+            self.value.pop(ind)
+        self.value = {i: v for i, v in enumerate(self.value.values())}
+        print(f"{len(rows_ind)} rows have been deleted from the table_name table")
+
+
+
 
 def apply_arith_op(table, op, col_name, value):
     if op == '=':
@@ -101,11 +110,29 @@ def apply_arith_op(table, op, col_name, value):
         # print(temp)
         # print(tabulate(list(temp.values()), headers=table.col_name, tablefmt='grid'))
         return temp
+    elif op == '>=':
+        temp = {}
+        ind = table.col_name.index(col_name)
+        for key, row in table.value.items():
+            if row[ind] >= value:
+                temp[key] = row
+        # print(temp)
+        # print(tabulate(list(temp.values()), headers=table.col_name, tablefmt='grid'))
+        return temp
     elif op == '<':
         temp = {}
         ind = table.col_name.index(col_name)
         for key, row in table.value.items():
             if row[ind] < value:
+                temp[key] = row
+        # print(temp)
+        # print(tabulate(list(temp.values()), headers=table.col_name, tablefmt='grid'))
+        return temp
+    elif op == '<=':
+        temp = {}
+        ind = table.col_name.index(col_name)
+        for key, row in table.value.items():
+            if row[ind] <= value:
                 temp[key] = row
         # print(temp)
         # print(tabulate(list(temp.values()), headers=table.col_name, tablefmt='grid'))
@@ -134,6 +161,8 @@ def apply_set_op(op, table1, table2):
 # table.insert(["s3", 'f', 'aaa3'])
 # table.insert(["nnn1", 'fr1', 'aaa1'])
 # table.insert(["s3", 'ff2', 'aaa3'])
+# table.simple_select(["*"])
+# table.delete_rows(['aaa', 'aaa1', "="])
 # table.simple_select(["*"])
 # table.cond_select(["*"], ['aaa', 'aaa1', "=", 'ff', 'ff', "<", "OR"])
 

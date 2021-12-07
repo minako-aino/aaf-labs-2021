@@ -1,6 +1,6 @@
 from table import *
-from cond_parser_tuple import postorder #parse
-# from imp_lexer import imp_lex
+from cond_parser_tuple import postorder, parse
+from imp_lexer import imp_lex
 
 class DB:
 
@@ -44,7 +44,8 @@ class DB:
         for table in self.tables:
             if table.table_name == table_name:
                 if cond:
-                    pass
+                    _, stacked_cond = postorder(cond)
+                    table.delete_rows(stacked_cond)
                 else:
                     print(f"table {table.table_name} was dropped")
                     table.value.clear()
@@ -64,6 +65,8 @@ class DB:
 # ast = parse(cond)
 # print(postorder(ast))
 # db.select("dogs", ["*"], ast)
+# db.delete("dogs", ast)
+# db.select("dogs", ["*"])
 # db.select("dogs", ["aaa", "ff"])
 # db.select("dogs", ["aaa", "ff", "ff333"])
 # db.delete("dog")
