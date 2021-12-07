@@ -33,7 +33,7 @@ class DB:
                 if cond:
                     pass
                 else:
-                    table.select(col_name)
+                    table.simple_select(col_name)
                 break
             else:
                 print("table not exist")

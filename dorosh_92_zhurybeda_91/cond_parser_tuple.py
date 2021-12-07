@@ -138,7 +138,16 @@ def print2DUtil(root, space):
 def print2D(root):
     print2DUtil(root, 0)
 
-# com = imp_lex('(name <= "Murzik") OR (name = "Pushok") AND ((dog = "Shiba") OR (cat = "myau"))')
+def postorder(root):
+    if root:
+
+        printPostorder(root.left)
+
+        printPostorder(root.right)
+
+        return(root.value)
+
+# com = imp_lex('(name <= "Murzik") OR (name = "Pushok") AND ((dog = "Shiba") OR (cat = "stas") AND (vidra = "jeka"))')
 # ast = parse(com)
 # print2D(ast)
 # printInorder(ast)
@@ -149,3 +158,4 @@ def print2D(root):
 # print(ast.children[0].value)
 # print(ast.children[0].children[0])
 # print(ast.children[0].children[1])
+# print(postorder(ast))

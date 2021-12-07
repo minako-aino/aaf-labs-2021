@@ -1,12 +1,14 @@
 from tabulate import tabulate
-# from tree import *
+
+
+# from stack import *
 
 
 class Table:
     def __init__(self):
         self.table_name = None
         self.col_name = None
-        self.value = []
+        self.value = {}
 
     def create(self, table_name, col_dict):
         self.table_name = table_name
@@ -15,14 +17,14 @@ class Table:
 
     def insert(self, value):
         if len(value) == len(self.col_name):
-            self.value.append(value)
+            self.value[len(self.value)] = value
             print(f'1 row has been inserted into {self.table_name}.')
         else:
             print("insertion failed")
 
-    def select(self, col_name):
+    def simple_select(self, col_name):
         if col_name == ['*']:
-            print(tabulate(self.value, headers=self.col_name, tablefmt='grid'))
+            print(tabulate(self.value.values(), headers=self.col_name, tablefmt='grid'))
         elif set(self.col_name) >= set(col_name):
             icol = []
             for i in range(len(col_name)):
@@ -36,7 +38,7 @@ class Table:
             #         temp.append(i[ind])
             #     value.append(temp)
             # value = list(map(list, zip(*value)))
-            for row in self.value:
+            for row in self.value.values():
                 temp = []
                 for i in icol:
                     temp.append(row[i])
@@ -45,16 +47,69 @@ class Table:
         else:
             print("column not exist")
 
+    def cond_select(self, col_name, cond):
+        pass
+
+
+def apply_sort_op(table, op, col_name, value):
+    if op == '=':
+        temp = {}
+        ind = table.col_name.index(col_name)
+        for key, row in table.value.items():
+            if row[ind] == value:
+                temp[key] = row
+        print(temp)
+        print(tabulate(list(temp.values()), headers=table.col_name, tablefmt='grid'))
+        return temp
+    elif op == '>':
+        temp = {}
+        ind = table.col_name.index(col_name)
+        for key, row in table.value.items():
+            if row[ind] > value:
+                temp[key] = row
+        # print(temp)
+        # print(tabulate(list(temp.values()), headers=table.col_name, tablefmt='grid'))
+        return temp
+    elif op == '<':
+        temp = {}
+        ind = table.col_name.index(col_name)
+        for key, row in table.value.items():
+            if row[ind] < value:
+                temp[key] = row
+        # print(temp)
+        # print(tabulate(list(temp.values()), headers=table.col_name, tablefmt='grid'))
+        return temp
+
+
+def apply_set_op(op, table1, table2):
+    if op == 'OR':
+        table1.update(table2)
+        res = dict(sorted(table1.items()))
+        return res
+    elif op == 'AND':
+        res = {}
+        unique_key = list(set(table1.keys()) & set(table2.keys()))
+        table1.update(table2)
+        for key in unique_key:
+            res[key] = table1[key]
+        res = dict(sorted(res.items()))
+        return res
+
 
 table = Table()
 table.create("dogs", ['s', 'ff', 'aaa'])
-table.insert(["s1", 'ff1', 'aaa1'])
+table.insert(["s1", 'ff2', 'aaa1'])
 table.insert(["s2", 'ff2', 'aaa2'])
+table.insert(["nnn1", 'ff2', 'aaa1'])
 table.insert(["s3", 'ff3', 'aaa3'])
-table.select(["*"])
-table.select(["aaa", "ff"])
-table.select(["aaa", "ff", "ff"])
+table.insert(["nnn1", 'fr1', 'aaa1'])
+table.insert(["s3", 'ff2', 'aaa3'])
+table.simple_select(["*"])
+
+table1 = apply_sort_op(table, "=", "aaa", "aaa1")
+table2 = apply_sort_op(table, "=", "ff", "ff2")
+
+
+# table.apply_set_op("OR", [[1,2,3], [1,2,3], [1,2,3]], [[1,2,2], [1,2,4], [1,2,3]])
+# table.simple_select(["aaa", "ff", "ff"])
 # db.delete("dogs")
-
-
-
