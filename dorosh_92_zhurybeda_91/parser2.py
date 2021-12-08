@@ -33,7 +33,7 @@ def parse_insert(tokens):
         for i in range(len(tokens)):
             if tokens[i][1] == "T_VALUE":
                 val = tokens[i][0]
-                col_name.append(val)
+                col_name.append(find_between(val,'"', '"'))
             if tokens[-2][1] != "T_RPAR" or tokens[-1][1] != "T_END":
                 print("syntx error")
         return com_name, table_name, col_name
@@ -134,9 +134,13 @@ def parse666():
         return all_parse(string)
 
 
-# com = all_parse("select a, c from table")
+# com = all_parse('SELECT id, favourite_food FROM cats WHERE name = "Murzik AND dog = shiba')
+# com1 = all_parse('SELECT id, favourite_food FROM cats')
+# com3 = all_parse('DELETE cats WHERE name = "Murzik"')
 # com = parse666()
 # print(com)
+# print(com1)
+# print(com3)
 
-# if re.match(r"(?i)\.exit", ".eXit"):
+# if re.match(r"(?i)\.exit", ".ExIT"):
 #     print(".EXIT")
