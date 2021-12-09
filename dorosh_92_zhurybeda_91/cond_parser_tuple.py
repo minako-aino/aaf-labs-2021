@@ -77,7 +77,6 @@ def parse(tokens):
     return ast
 
 
-# TODO create cond print
 def _print_ast(ast):
     if type(ast) is Node:
         print(ast.value + ' ')

@@ -6,6 +6,7 @@ class Table:
         self.table_name = None
         self.col_name = None
         self.value = {}
+        self.index = {}
 
     def create(self, table_name, col_dict):
         self.table_name = table_name
