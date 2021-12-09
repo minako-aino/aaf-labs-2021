@@ -2,7 +2,7 @@ from db import *
 from parser2 import *
 
 
-def process(db):
+def process():
     while True:
         try:
             command = parse666()
@@ -10,26 +10,29 @@ def process(db):
                 break
             else:
                 if command[0][1] == "T_CREATE":
-                    db.create(command[1], list(command[2].keys()))
+                    db.create(command[1], command[2])
                 elif command[0][1] == "T_INSERT":
                     db.insert(command[1], command[2])
                 elif command[0][1] == "T_SELECT":
-                    db.select(command[1], command[2])
+                    if len(command) == 3:
+                        db.select(command[1], command[2])
+                    elif len(command) == 4:
+                        db.select(command[1], command[2], command[3])
                 elif command[0][1] == "T_DELETE":
                     if len(command) == 3:
                         db.delete(command[1], command[2])
                     elif len(command) == 2:
                         db.delete(command[1])
                 else:
-                    process(db)
+                    process()
                     print("error")
         except:
-            process(db)
+            process()
 
 
 if __name__ == '__main__':
     db = DB()
-    process(db)
+    process()
 
 # db = DB()
 # print(all_parse("create t (a,b,c)"))
