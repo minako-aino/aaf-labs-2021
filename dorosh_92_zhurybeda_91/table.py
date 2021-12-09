@@ -1,5 +1,6 @@
 from tabulate import tabulate
 from tree import *
+import re
 
 class Table:
     def __init__(self):
@@ -74,7 +75,7 @@ class Table:
                     value = stack.pop()
                     col_name = stack.pop()
                     stack.append(apply_arith_op(self, i, col_name, value))
-                elif i in ["OR", "AND"]:
+                elif re.match(r'(?i)or', i) or re.match(r'(?i)and',i):
                     tbl1 = stack.pop()
                     tbl2 = stack.pop()
                     stack.append(apply_set_op(i, tbl1, tbl2))
@@ -205,11 +206,11 @@ def apply_arith_op(table, op, col_name, value):
 
 
 def apply_set_op(op, table1, table2):
-    if op == 'OR':
+    if re.match(r'(?i)or', op):
         table1.update(table2)
         res = dict(sorted(table1.items()))
         return res
-    elif op == 'AND':
+    elif re.match(r'(?i)and', op):
         res = {}
         unique_key = list(set(table1.keys()) & set(table2.keys()))
         table1.update(table2)
