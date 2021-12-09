@@ -154,6 +154,7 @@ def postorder(root, lst=[]):
 
 # com = imp_lex('(name <= "Murzik") OR (name = "Pushok") AND ((dog = "Shiba") OR (cat = "stas") AND (vidra = "jeka"))')
 # ast = parse(com)
+# print(postorder(ast))
 # print2D(ast)
 # printInorder(ast)
 # print("================")

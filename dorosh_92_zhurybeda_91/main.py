@@ -10,7 +10,7 @@ def process():
                 break
             else:
                 if command[0][1] == "T_CREATE":
-                    db.create(command[1], list(command[2].keys()))
+                    db.create(command[1], command[2])
                 elif command[0][1] == "T_INSERT":
                     db.insert(command[1], command[2])
                 elif command[0][1] == "T_SELECT":
