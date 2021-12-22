@@ -61,7 +61,7 @@ class DB:
 # db.insert("dogs", ["nnn1", 'fr1', 'aaa1'])
 # db.insert("dogs", ["s3", 'ff2', 'aaa1'])
 # db.select("dogs", ["*"])
-# cond = imp_lex('(aaa ="aaa1") AND ( ff > "ff")')
+# cond = imp_lex('(a>"4")')
 # ast = parse(cond)
 # print(postorder(ast))
 # db.select("dogs", ["*"], ast)

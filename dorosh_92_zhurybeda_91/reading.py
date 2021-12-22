@@ -110,9 +110,9 @@ def full_parse(command):
 
 
 
-print(full_parse("SELECT id, favourite_food FROM cats WHERE (name <= “Murzik”) OR (name = “Pushok”)"))
+# print(full_parse("SELECT id, favourite_food FROM cats WHERE (name <= “Murzik”) OR (name = “Pushok”)"))
 
-command_name, tab_name, col_name, cond = full_parse("SELECT id, favourite_food FROM cats WHERE (name <= “Murzik”) OR ((name = “Pushok”) AND (id = str))")
+# command_name, tab_name, col_name, cond = full_parse("SELECT id, favourite_food FROM cats WHERE (name <= “Murzik”) OR ((name = “Pushok”) AND (id = str))")
 
 # print(cond.value)
 # print(cond.children[0].value)
