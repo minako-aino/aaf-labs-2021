@@ -113,7 +113,7 @@ class Table:
             for name in self.index:
                 for ind, row in self.value.items():
                     self.tree[name].insert((ind, row[self.index[name]]))
-        print(f"{len(rows_ind)} rows have been deleted from the table_name table")
+        print(f"{len(rows_ind)} rows have been deleted from the {self.table_name} table")
 
 
 def index_op(table, op, col_name, value):
