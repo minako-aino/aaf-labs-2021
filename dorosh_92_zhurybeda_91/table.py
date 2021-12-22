@@ -107,6 +107,12 @@ class Table:
         for ind in rows_ind:
             self.value.pop(ind)
         self.value = {i: v for i, v in enumerate(self.value.values())}
+        if self.index:
+            for name in self.tree:
+                self.tree[name] = Node((None, None))
+            for name in self.index:
+                for ind, row in self.value.items():
+                    self.tree[name].insert((ind, row[self.index[name]]))
         print(f"{len(rows_ind)} rows have been deleted from the table_name table")
 
 
@@ -241,7 +247,7 @@ def apply_set_op(op, table1, table2):
         return res
 
 # table = Table()
-# table.create("dogs", {'s': 0, 'ff': 1, 'aaa': 1})
+# table.create("dogs", {'s': 0, 'ff': 0, 'aaa': 0})
 # table.insert(["saaaaa1", 'ff2', 'aaa1'])
 # table.insert(["s2", 'ff2', 'ff2'])
 # table.insert(["a", 'aaa', 'aaa1'])
@@ -249,9 +255,11 @@ def apply_set_op(op, table1, table2):
 # table.insert(["nnn1", 'aaa1', 'aaa1'])
 # table.insert(["s3", 'ff2', 'aaa3'])
 # table.simple_select(["*"])
-# table.cond_select(["*"], [('ff', "T_VALUE"), ('ff', "T_VALUE"), ("<", "T_LESS")])
+#
 # table.cond_select(["*"], [('ff', "T_STR"), ('s', "T_STR"), ("<", "T_LESS")])
-# table.delete_rows([('ff', "T_STR"), ('aaa', "T_STR"), ("<", "T_LESS")])
+# table.cond_select(["*"],[('ff', "T_STR"), ('aaa', "T_STR"), (">", "T_MORE")])
+# table.delete_rows([('ff', "T_STR"), ('aaa', "T_STR"), (">", "T_MORE")])
+# table.cond_select(["*"],[('ff', "T_STR"), ('ff2', "T_VALUE"), ("=", "T_EQ")])
 # table.simple_select(["*"])
 
 
