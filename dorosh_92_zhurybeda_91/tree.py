@@ -46,7 +46,9 @@ class Node:
         if self.right:
             self.right.PrintTree()
 
-    def get_ind(self, arr=[]):
+    def get_ind(self, arr=None):
+        if arr is None:
+            arr = []
         if self.left:
             self.left.get_ind(arr)
         for key in self.key:
@@ -56,7 +58,9 @@ class Node:
             self.right.get_ind(arr)
         return arr
 
-    def greater(self, value, eq=False, arr=[]):
+    def greater(self, value, eq=False, arr=None):
+        if arr is None:
+            arr = []
         if eq:
             if self.data is not None:
                 if self.data >= value:
@@ -89,7 +93,9 @@ class Node:
                         self.right.greater(value, eq, arr)
         return value, eq, arr
 
-    def smaller(self, value, eq=False, arr=[]):
+    def smaller(self, value, eq=False, arr=None):
+        if arr is None:
+            arr = []
         if eq:
             if self.data is not None:
                 if self.data <= value:

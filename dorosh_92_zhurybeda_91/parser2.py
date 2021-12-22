@@ -105,7 +105,7 @@ def all_parse(input):
     elif tokens[0][1] == "T_DELETE":
         return parse_delete(tokens)
     else:
-        print("error")
+        print("wrong command name")
 
 #TODO debug CLI
 def many_lines_input():
@@ -116,7 +116,7 @@ def many_lines_input():
             line = line[:line.find(";")]
             contents.append(line)
             break
-        elif re.match( r"\.(?i)exit", line):
+        elif re.match(r"\.(?i)exit", line):
             return line
         else:
             contents.append(line)
@@ -134,13 +134,16 @@ def parse666():
         return all_parse(string)
 
 
-# com = all_parse('SELECT id, favourite_food FROM cats WHERE name = "Murzik AND dog = shiba')
+# com = all_parse('SELECT id, favourite_food FROM cats WHERE (name = "Murzik") AND (dog = "shiba")')
 # com1 = all_parse('SELECT id, favourite_food FROM cats')
 # com3 = all_parse('CREATE cats (id INDEXED, name INDEXED, favourite_food)')
 # com = parse666()
-# print(com3)
+# printPostorder(com[3])
 # print(com1)
 # print(com3)
+# com4 = all_parse('select a from dogs where (a>"4") or ("4"<=bb)')
+# print(com4)
+
 
 # if re.match(r"(?i)\.exit", ".ExIT"):
 #     print(".EXIT")

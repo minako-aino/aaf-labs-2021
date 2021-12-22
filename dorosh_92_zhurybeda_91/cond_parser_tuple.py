@@ -77,21 +77,6 @@ def parse(tokens):
     return ast
 
 
-def _print_ast(ast):
-    if type(ast) is Node:
-        print(ast.value + ' ')
-        _print_ast(ast.children[1])
-        _print_ast(ast.children[0])
-    elif type(ast) is list:
-        print(ast[0])
-        print(ast[1])
-
-
-def print_ast(ast):
-    if ast.value is not None:
-        _print_ast(ast.value)
-
-
 def printPreorder(root):
     if root:
         print(root.value),
@@ -107,7 +92,7 @@ def printPostorder(root):
 
         printPostorder(root.right)
 
-        print(root.value)
+        print(root.value, root.token_type)
 
 
 def printInorder(root):
@@ -142,12 +127,14 @@ def print2D(root):
     print2DUtil(root, 0)
 
 
-def postorder(root, lst=[]):
+def postorder(root, lst=None):
+    if lst is None:
+        lst = []
     if root:
         postorder(root.left, lst)
 
         postorder(root.right, lst)
-        lst.append(root.value)
+        lst.append((root.value, root.token_type))
 
         return root.value, lst
 
@@ -164,3 +151,6 @@ def postorder(root, lst=[]):
 # print(ast.children[0].value)
 # print(ast.children[0].children[0])
 # print(ast.children[0].children[1])
+# com = imp_lex('(a>"4") or ("4"<=bb)')
+# ast = parse(com)
+# print(postorder(ast))

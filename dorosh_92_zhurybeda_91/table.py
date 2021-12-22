@@ -1,6 +1,7 @@
 from tabulate import tabulate
 from tree import *
-import re
+
+
 
 class Table:
     def __init__(self):
@@ -32,7 +33,7 @@ class Table:
 
     def simple_select(self, col_name):
         if col_name == ['*']:
-            print(tabulate(self.value.values(), headers=self.col_name, tablefmt='grid'))
+            print(tabulate(self.value.values(), headers=self.col_name, tablefmt='pretty'))
         elif set(self.col_name) >= set(col_name):
             icol = []
             for i in range(len(col_name)):
@@ -40,54 +41,50 @@ class Table:
                     if self.col_name[j] == col_name[i]:
                         icol.append(j)
             value = []
-            # for ind in icol:
-            #     temp = []
-            #     for i in self.value:
-            #         temp.append(i[ind])
-            #     value.append(temp)
-            # value = list(map(list, zip(*value)))
             for row in self.value.values():
                 temp = []
                 for i in icol:
                     temp.append(row[i])
                 value.append(temp)
-            print(tabulate(value, headers=col_name, tablefmt='grid'))
+            print(tabulate(value, headers=col_name, tablefmt='pretty'))
         else:
             print("column not exist")
 
     def cond_calc(self, cond):
         stack = []
-        if cond == 3:
-            for i in cond:
-                if i in ["<", "=", ">", ">=", "<="]:
-                    value = stack.pop()
+        for token in cond:
+            if token[1] in ["T_EQ", "T_LESS", "T_MORE", "T_MORE_EQ", "T_LESS_EQ"]:
+                if stack[-1][1] == "T_VALUE" and stack[-2][1] == "T_STR":
+                    value = stack.pop()[0]
+                    col_name = stack.pop()[0]
                     if value in self.index.keys():
-                        col_name = stack.pop()
-                        stack.append(index_op(self, i, col_name, value))
+                        stack.append(index_op(self, token[1], col_name, value))
                     else:
-                        col_name = stack.pop()
-                        stack.append(apply_arith_op(self, i, col_name, value))
-                else:
-                    stack.append(i)
-        else:
-            for i in cond:
-                if i in ["<", "=", ">", ">=", "<="]:
-                    value = stack.pop()
-                    col_name = stack.pop()
-                    stack.append(apply_arith_op(self, i, col_name, value))
-                elif re.match(r'(?i)or', i) or re.match(r'(?i)and',i):
-                    tbl1 = stack.pop()
-                    tbl2 = stack.pop()
-                    stack.append(apply_set_op(i, tbl1, tbl2))
-                else:
-                    stack.append(i)
-            res_table = stack.pop()
+                        stack.append(apply_arith_op_val(self, token[1], col_name, value))
+                elif stack[-1][1] == "T_STR" and stack[-2][1] == "T_VALUE":
+                    col_name = stack.pop()[0]
+                    value = stack.pop()[0]
+                    if value in self.index.keys():
+                        stack.append(index_op(self, token[1], col_name, value))
+                    else:
+                        stack.append(apply_arith_op_val(self, token[1], col_name, value))
+                elif stack[-1][1] == "T_STR" and stack[-2][1] == "T_STR":
+                    col_name1 = stack.pop()[0]
+                    col_name2 = stack.pop()[0]
+                    stack.append(apply_arith_op_col(self, token[1], col_name1, col_name2))
+            elif token[1] in ["T_OR", "T_AND"]:
+                tbl1 = stack.pop()
+                tbl2 = stack.pop()
+                stack.append(apply_set_op(token[1], tbl1, tbl2))
+            else:
+                stack.append(token)
+        res_table = stack.pop()
         return res_table
 
     def cond_select(self, col_name, cond):
         if col_name == ["*"]:
             res_table = self.cond_calc(cond)
-            print(tabulate(res_table.values(), headers=self.col_name, tablefmt='grid'))
+            print(tabulate(res_table.values(), headers=self.col_name, tablefmt='pretty'))
         elif set(self.col_name) >= set(col_name):
             res_table = self.cond_calc(cond)
             icol = []
@@ -101,116 +98,146 @@ class Table:
                 for i in icol:
                     temp.append(row[i])
                 value.append(temp)
-            print(tabulate(value, headers=col_name, tablefmt='grid'))
+            print(tabulate(value, headers=col_name, tablefmt='pretty'))
         else:
             print("column not exist")
-
 
     def delete_rows(self, cond):
         rows_ind = list(self.cond_calc(cond).keys())
         for ind in rows_ind:
             self.value.pop(ind)
         self.value = {i: v for i, v in enumerate(self.value.values())}
-        print(f"{len(rows_ind)} rows have been deleted from the table_name table")
+        if self.index:
+            for name in self.tree:
+                self.tree[name] = Node((None, None))
+            for name in self.index:
+                for ind, row in self.value.items():
+                    self.tree[name].insert((ind, row[self.index[name]]))
+        print(f"{len(rows_ind)} rows have been deleted from the {self.table_name} table")
+
 
 def index_op(table, op, col_name, value):
-    if op == '=':
+    if op == 'T_OR':
         ind = table.tree[col_name].search(value)
         temp = {}
         for i in ind:
             temp[i] = table.value[i]
-        # print(temp)
-        # print(tabulate(list(temp.values()), headers=table.col_name, tablefmt='grid'))
         return temp
-    elif op == '>':
+    elif op == 'T_MORE':
         temp = {}
         _, _, ind = table.tree[col_name].greater(value)
         for i in ind:
             temp[i] = table.value[i]
-        # print(temp)
-        # print(tabulate(list(temp.values()), headers=table.col_name, tablefmt='grid'))
         return temp
-    elif op == '>=':
+    elif op == 'T_MORE_EQ':
         temp = {}
         _, _, ind = table.tree[col_name].greater(value, eq=True)
         for i in ind:
             temp[i] = table.value[i]
-        # print(temp)
-        # print(tabulate(list(temp.values()), headers=table.col_name, tablefmt='grid'))
+
         return temp
-    elif op == '<':
+    elif op == 'T_LESS':
         temp = {}
         _, _, ind = table.tree[col_name].smaller(value)
         for i in ind:
             temp[i] = table.value[i]
-        # print(temp)
-        # print(tabulate(list(temp.values()), headers=table.col_name, tablefmt='grid'))
         return temp
-    elif op == '<=':
+    elif op == 'T_LESS_EQ':
         temp = {}
         _, _, ind = table.tree[col_name].smaller(value, eq=True)
         for i in ind:
             temp[i] = table.value[i]
-        # print(temp)
-        # print(tabulate(list(temp.values()), headers=table.col_name, tablefmt='grid'))
         return temp
 
 
-
-def apply_arith_op(table, op, col_name, value):
-    if op == '=':
+def apply_arith_op_val(table, op, col_name, value):
+    if op == 'T_EQ':
         temp = {}
         ind = table.col_name.index(col_name)
         for key, row in table.value.items():
             if row[ind] == value:
                 temp[key] = row
-        # print(temp)
-        # print(tabulate(list(temp.values()), headers=table.col_name, tablefmt='grid'))
         return temp
-    elif op == '>':
+    elif op == 'T_MORE':
         temp = {}
         ind = table.col_name.index(col_name)
         for key, row in table.value.items():
             if row[ind] > value:
                 temp[key] = row
-        # print(temp)
-        # print(tabulate(list(temp.values()), headers=table.col_name, tablefmt='grid'))
         return temp
-    elif op == '>=':
+    elif op == 'T_MORE_EQ':
         temp = {}
         ind = table.col_name.index(col_name)
         for key, row in table.value.items():
             if row[ind] >= value:
                 temp[key] = row
-        # print(temp)
-        # print(tabulate(list(temp.values()), headers=table.col_name, tablefmt='grid'))
         return temp
-    elif op == '<':
+    elif op == 'T_LESS':
         temp = {}
         ind = table.col_name.index(col_name)
         for key, row in table.value.items():
             if row[ind] < value:
                 temp[key] = row
-        # print(temp)
-        # print(tabulate(list(temp.values()), headers=table.col_name, tablefmt='grid'))
         return temp
-    elif op == '<=':
+    elif op == 'T_LESS_EQ':
         temp = {}
         ind = table.col_name.index(col_name)
         for key, row in table.value.items():
             if row[ind] <= value:
                 temp[key] = row
-        # print(temp)
-        # print(tabulate(list(temp.values()), headers=table.col_name, tablefmt='grid'))
+        return temp
+
+
+def apply_arith_op_col(table, op, col_name1, col_name2):
+    if op == 'T_EQ':
+        temp = {}
+        print(col_name1, col_name2)
+        ind1 = table.col_name.index(col_name1)
+        ind2 = table.col_name.index(col_name2)
+        for key, row in table.value.items():
+            if row[ind1] == row[ind2]:
+                temp[key] = row
+        return temp
+    elif op == 'T_MORE':
+        temp = {}
+        ind1 = table.col_name.index(col_name1)
+        ind2 = table.col_name.index(col_name2)
+        for key, row in table.value.items():
+            if row[ind2] > row[ind1]:
+                temp[key] = row
+        return temp
+    elif op == 'T_MORE_EQ':
+        temp = {}
+        ind1 = table.col_name.index(col_name1)
+        ind2 = table.col_name.index(col_name2)
+        for key, row in table.value.items():
+            if row[ind2] >= row[ind1]:
+                temp[key] = row
+        return temp
+    elif op == 'T_LESS':
+        temp = {}
+        ind1 = table.col_name.index(col_name1)
+        ind2 = table.col_name.index(col_name2)
+        for key, row in table.value.items():
+            if row[ind2] < row[ind1]:
+                temp[key] = row
+        return temp
+    elif op == 'T_LESS_EQ':
+        temp = {}
+        ind1 = table.col_name.index(col_name1)
+        ind2 = table.col_name.index(col_name2)
+        for key, row in table.value.items():
+            if row[ind2] >= row[ind1]:
+                temp[key] = row
         return temp
 
 
 def apply_set_op(op, table1, table2):
-    if re.match(r'(?i)or', op):
+    if op == "T_OR":
         table1.update(table2)
         res = dict(sorted(table1.items()))
         return res
-    elif re.match(r'(?i)and', op):
+    elif op == "T_AND":
         res = {}
         unique_key = list(set(table1.keys()) & set(table2.keys()))
         table1.update(table2)
@@ -220,30 +247,20 @@ def apply_set_op(op, table1, table2):
         return res
 
 # table = Table()
-# table.create("dogs", {'s': 0, 'ff': 1, 'aaa': 1})
-# table.insert(["s1", 'ff2', 'aaa1'])
-# table.insert(["s2", 'ff2', 'aaa2'])
-# table.insert(["nnn1", 'ff2', 'aaa1'])
+# table.create("dogs", {'s': 0, 'ff': 0, 'aaa': 0})
+# table.insert(["saaaaa1", 'ff2', 'aaa1'])
+# table.insert(["s2", 'ff2', 'ff2'])
+# table.insert(["a", 'aaa', 'aaa1'])
 # table.insert(["s3", 'f', 'aaa3'])
-# table.insert(["nnn1", 'fr1', 'aaa1'])
+# table.insert(["nnn1", 'aaa1', 'aaa1'])
 # table.insert(["s3", 'ff2', 'aaa3'])
-# table.tree["ff"].PrintTree()
-# print(table.index["ff"])
 # table.simple_select(["*"])
-# table.delete_rows(['aaa', 'aaa1', "="])
+#
+# table.cond_select(["*"], [('ff', "T_STR"), ('s', "T_STR"), ("<", "T_LESS")])
+# table.cond_select(["*"],[('ff', "T_STR"), ('aaa', "T_STR"), (">", "T_MORE")])
+# table.delete_rows([('ff', "T_STR"), ('aaa', "T_STR"), (">", "T_MORE")])
+# table.cond_select(["*"],[('ff', "T_STR"), ('ff2', "T_VALUE"), ("=", "T_EQ")])
 # table.simple_select(["*"])
-# table.cond_select(["*"], ['ff', 'ff2', "="])
-# print(table.cond_calc(['ff', 'ff2', "="]))
-# print(table.value)
-# print(table.tree)
-# print(table.index)
-# table1 = apply_arith_op(table, "=", "aaa", "aaa1")
-# table2 = apply_arith_op(table, "<", "ff", "ff2")
-# print(table1)
-# print(table2)
-# print(apply_set_op("OR", table1, table2))
 
-# table.apply_set_op("OR", [[1,2,3], [1,2,3], [1,2,3]], [[1,2,2], [1,2,4], [1,2,3]])
-# table.simple_select(["aaa", "ff", "ff"])
-# db.delete("dogs")
-# print(index_op(table, '<', "ff", "ff2"))
+
+
